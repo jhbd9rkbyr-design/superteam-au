@@ -96,7 +96,7 @@ export function Hero() {
         className="absolute left-0 right-0 z-[1] flex justify-center pointer-events-none"
         style={{ top: '22%', opacity: textOpacity, y: textY }}
       >
-        <div className="text-center px-6" style={{ fontFamily: 'var(--font-display)', textShadow: '0 2px 30px rgba(0,0,0,0.5)' }}>
+        <div className="text-center px-6" style={{ fontFamily: 'var(--font-display)' }}>
           <h1>
             {/* Line 1 — slides up from behind Uluru */}
             <motion.span

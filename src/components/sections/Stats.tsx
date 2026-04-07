@@ -56,21 +56,21 @@ function StatCounter({
   return (
     <motion.div
       ref={ref}
-      className="flex flex-col items-center justify-center"
+      className="flex flex-col items-center justify-center text-center"
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
       viewport={{ once: true }}
     >
       <div
-        className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#FAF7ED]"
+        className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#FAF7ED] text-center w-full"
         style={{ fontFamily: 'var(--font-display)' }}
       >
         {count.toLocaleString()}
         {suffix}
       </div>
       <p
-        className="text-base md:text-lg text-[#FAF7ED]/70 mt-2 font-bold"
+        className="text-base md:text-lg text-[#FAF7ED]/70 mt-2 font-bold text-center w-full"
         style={{ fontFamily: 'var(--font-display)' }}
       >
         {label}
@@ -82,7 +82,7 @@ function StatCounter({
 export function Stats() {
   const [stats, setStats] = useState<CmsStat[]>(defaultStats);
   const [logos, setLogos] = useState<CmsPartner[]>(defaultLogos);
-  const [socialLabel, setSocialLabel] = useState('Building with the best in Solana');
+  const [socialLabel, setSocialLabel] = useState('Building with the best');
 
   useEffect(() => {
     fetchStats().then((d) => d && setStats(d));
@@ -114,7 +114,7 @@ export function Stats() {
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           {/* Stats counters */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-6 place-items-center">
             {stats.map((stat, idx) => (
               <StatCounter
                 key={idx}

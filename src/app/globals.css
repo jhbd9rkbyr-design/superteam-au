@@ -1,0 +1,298 @@
+@import "tailwindcss";
+@import "react-tweet/theme.css";
+
+/* ═══════════════════════════════════════════
+   SUPERTEAM AUSTRALIA — BRAND TOKENS
+   ═══════════════════════════════════════════ */
+
+@theme inline {
+  /* Brand */
+  --color-brand-green: #00833F;
+  --color-brand-gold: #F9CC01;
+  --color-brand-green-light: #68BD88;
+  --color-brand-gold-light: #FCE266;
+
+  /* Surfaces */
+  --color-cream: #FAFAF5;
+  --color-dark-green: #20573A;
+  --color-deep-dark: #0A2010;
+  --color-card-dark: #1A2E1C;
+  --color-warm-dark: #241E18;
+
+  /* Text */
+  --color-text-primary: #141E14;
+  --color-text-secondary: #141E1499;
+  --color-text-tertiary: #141E1466;
+
+  /* Fonts — NOTE: --font-satoshi and --font-inter are injected by Next.js on <html>.
+     We reference them directly in :root below, NOT in @theme (which can't resolve runtime vars). */
+
+  /* Animation */
+  --animate-gradient-flow: gradient-flow 6s linear infinite;
+}
+
+@keyframes gradient-flow {
+  0% { background-position: 0 center; }
+  100% { background-position: -200% center; }
+}
+
+.animate-gradient-flow {
+  animation: gradient-flow 5s linear infinite;
+}
+
+:root {
+  --background: #FAFAF5;
+  --foreground: #141E14;
+  --font-display: var(--font-satoshi), sans-serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+}
+
+/* ── Base ── */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Satoshi for all headings, nav, buttons, labels, CTAs */
+h1, h2, h3, h4, h5, h6,
+button, [role="button"],
+nav, nav a,
+label {
+  font-family: var(--font-display);
+}
+
+/* ── Brand Gradients ── */
+.bg-gradient-brand {
+  background: linear-gradient(135deg, #00833F 0%, #F9CC01 100%);
+}
+
+.bg-gradient-brand-vertical {
+  background: linear-gradient(180deg, #01833F 0%, #FECE00 100%);
+}
+
+.bg-gradient-brand-diagonal {
+  background: linear-gradient(45deg, #00833F 0%, #F9CC01 100%);
+}
+
+.bg-gradient-dark {
+  background: linear-gradient(180deg, #0A2010 0%, #20573A 100%);
+}
+
+/* Gradient border utility */
+.border-gradient {
+  position: relative;
+  background-clip: padding-box;
+  border: 1px solid transparent;
+}
+
+.border-gradient::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  margin: -1px;
+  border-radius: inherit;
+  background: linear-gradient(45deg, #00833F, #F9CC01);
+}
+
+/* Frosted glass */
+.glass-light {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.glass-dark {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Topo contour pattern (CSS-only approximation) */
+.bg-topo {
+  background-image:
+    radial-gradient(ellipse 600px 600px at 20% 50%, rgba(0, 131, 63, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 800px 400px at 80% 30%, rgba(249, 204, 1, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 400px at 50% 80%, rgba(0, 131, 63, 0.03) 0%, transparent 70%);
+}
+
+.bg-topo-dark {
+  background-image:
+    radial-gradient(ellipse 600px 600px at 20% 50%, rgba(0, 131, 63, 0.15) 0%, transparent 70%),
+    radial-gradient(ellipse 800px 400px at 80% 30%, rgba(249, 204, 1, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 400px at 50% 80%, rgba(0, 131, 63, 0.1) 0%, transparent 70%);
+}
+
+/* Section transitions */
+.section-fade-to-dark {
+  background: linear-gradient(180deg, #FAFAF5 0%, #20573A 100%);
+}
+
+.section-fade-to-light {
+  background: linear-gradient(180deg, #20573A 0%, #FAFAF5 100%);
+}
+
+/* Text gradient — doubled pattern tiles seamlessly at the loop reset */
+.text-gradient {
+  background: linear-gradient(
+    90deg,
+    #00833F 0%, #68BD88 12.5%, #F9CC01 25%, #68BD88 37.5%,
+    #00833F 50%, #68BD88 62.5%, #F9CC01 75%, #68BD88 87.5%,
+    #00833F 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-flow 5s linear infinite;
+}
+
+/* Noise texture overlay */
+.noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ── Hero cloud animations ── */
+.hero-cloud {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  filter: blur(50px);
+  will-change: transform;
+}
+
+.hero-cloud-1 {
+  width: 500px;
+  height: 140px;
+  top: 6%;
+  animation: cloud-drift 55s linear infinite;
+}
+
+.hero-cloud-2 {
+  width: 650px;
+  height: 160px;
+  top: 12%;
+  animation: cloud-drift 70s linear infinite;
+  animation-delay: -20s;
+  opacity: 0.6;
+}
+
+.hero-cloud-3 {
+  width: 350px;
+  height: 100px;
+  top: 3%;
+  animation: cloud-drift-reverse 60s linear infinite;
+  animation-delay: -10s;
+  opacity: 0.4;
+}
+
+.hero-cloud-4 {
+  width: 450px;
+  height: 120px;
+  top: 18%;
+  animation: cloud-drift-reverse 80s linear infinite;
+  animation-delay: -35s;
+  opacity: 0.3;
+}
+
+@keyframes cloud-drift {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(calc(100vw + 120%)); }
+}
+
+@keyframes cloud-drift-reverse {
+  0% { transform: translateX(calc(100vw + 100%)); }
+  100% { transform: translateX(-120%); }
+}
+
+/* Boomerang pixel shape */
+.pixel-boomerang {
+  background: none !important;
+}
+
+/* Member carousel marquee */
+@keyframes marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee-scroll linear infinite;
+  width: max-content;
+}
+
+/* react-tweet overrides */
+[data-theme="dark"] {
+  --tweet-bg-color: #1a2e1c;
+  --tweet-bg-color-hover: #243824;
+  --tweet-border: 1px solid rgba(255, 255, 255, 0.08);
+  --tweet-font-color: #fff;
+  --tweet-font-color-secondary: rgba(255, 255, 255, 0.45);
+  --tweet-actions-font-weight: 500;
+  --tweet-border-radius: 16px;
+  --tweet-color-blue-secondary: #00833F;
+}
+
+[data-theme="dark"] .react-tweet-theme {
+  margin: 0 !important;
+  max-width: 100% !important;
+}
+
+/* Floating animation for tweet cards — smooth, subtle */
+@keyframes tweet-float {
+  0%, 100% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+  50% { transform: translateY(var(--float-y, -6px)) rotate(var(--rot, 0deg)); }
+}
+
+.tweet-float {
+  animation: tweet-float var(--float-dur, 6s) ease-in-out infinite;
+  animation-delay: var(--float-delay, 0s);
+  will-change: transform;
+  transition: animation-play-state 0.3s ease;
+}
+
+.tweet-float:hover {
+  animation-play-state: paused;
+}
+
+/* Tweet masonry — browser auto-balances column heights */
+.tweet-masonry {
+  columns: 3;
+  column-gap: 18px;
+}
+
+@media (max-width: 1024px) { .tweet-masonry { columns: 2; } }
+@media (max-width: 640px)  { .tweet-masonry { columns: 1; } }
+
+/* Zoom shrinks the actual layout box — no hacks needed */
+.tweet-embed-compact {
+  zoom: 0.55;
+}
+
+.tweet-embed-compact > div,
+.tweet-embed-compact .react-tweet-theme,
+.tweet-embed-compact article {
+  margin: 0 !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(0, 131, 63, 0.2);
+  color: #141E14;
+}

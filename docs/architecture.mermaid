@@ -1,0 +1,69 @@
+graph TB
+    subgraph "Client (Browser)"
+        LP["Landing Page /"]
+        MD["Member Directory /members"]
+        OB["Onboarding /get-involved"]
+    end
+
+    subgraph "Next.js 16 App Router"
+        subgraph "Layout"
+            NAV["Navbar (theme-aware)"]
+            FTR["Footer"]
+        end
+
+        subgraph "Landing Sections"
+            HERO["Hero (Uluru + clouds)"]
+            STATS["Stats + Logo Carousel"]
+            WDO["What We Do"]
+            EVT["Events (Luma)"]
+            COM["Community Carousel"]
+            TEST["Testimonials (react-tweet)"]
+            GI["Get Involved CTA"]
+            FAQ["FAQ"]
+        end
+
+        subgraph "Member Directory"
+            SEARCH["Search + Filters"]
+            GRID["Animated Card Grid"]
+            MDATA["member-data.ts"]
+        end
+
+        subgraph "Onboarding Flow"
+            STEP1["Step 1: Name + Location"]
+            STEP2["Step 2: Role + Skills + Experience"]
+            STEP3["Step 3: Links"]
+            STEP4["Step 4: Interests + Submit"]
+            CONF["Confirmation Screen"]
+        end
+    end
+
+    subgraph "Styling"
+        TW["Tailwind CSS 4"]
+        FM["Framer Motion 12"]
+        SAT["Satoshi (display)"]
+        INT["Inter (body)"]
+    end
+
+    subgraph "External Services (Optional)"
+        SB["Supabase (onboarding data)"]
+        LUMA["Luma API (events)"]
+        TWT["Twitter/X (tweet embeds)"]
+    end
+
+    LP --> HERO & STATS & WDO & EVT & COM & TEST & GI & FAQ
+    MD --> SEARCH & GRID
+    GRID --> MDATA
+    OB --> STEP1 --> STEP2 --> STEP3 --> STEP4 --> CONF
+    STEP4 -.-> SB
+    EVT -.-> LUMA
+    TEST -.-> TWT
+
+    classDef page fill:#00833F,stroke:#20573A,color:#fff
+    classDef section fill:#20573A,stroke:#00833F,color:#fff
+    classDef external fill:#F9CC01,stroke:#00833F,color:#0A2010
+    classDef style fill:#0A2010,stroke:#00833F,color:#fff
+
+    class LP,MD,OB page
+    class HERO,STATS,WDO,EVT,COM,TEST,GI,FAQ,SEARCH,GRID,MDATA,STEP1,STEP2,STEP3,STEP4,CONF section
+    class SB,LUMA,TWT external
+    class TW,FM,SAT,INT style

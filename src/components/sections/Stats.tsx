@@ -63,8 +63,11 @@ function StatCounter({
       viewport={{ once: true }}
     >
       <div
-        className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#FAF7ED] text-center w-full"
-        style={{ fontFamily: 'var(--font-display)' }}
+        className="text-4xl md:text-5xl lg:text-6xl font-bold text-center w-full bg-clip-text text-transparent"
+        style={{
+          fontFamily: 'var(--font-display)',
+          backgroundImage: 'linear-gradient(135deg, #FCE266 0%, #F9CC01 40%, #E5A800 100%)',
+        }}
       >
         {count.toLocaleString()}
         {suffix}
@@ -113,6 +116,14 @@ export function Stats() {
         }}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12">
+          {/* Subtitle */}
+          <p
+            className="text-center text-lg md:text-xl text-[#FAF7ED]/80 mb-10 max-w-xl mx-auto leading-relaxed"
+            style={{ fontFamily: 'var(--font-display)' }}
+          >
+            Australia&apos;s most active community of builders, designers, and operators on Solana.
+          </p>
+
           {/* Stats counters */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-6 place-items-center">
             {stats.map((stat, idx) => (

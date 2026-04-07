@@ -105,7 +105,7 @@ export function Hero() {
             </motion.span>
             {/* Line 2 — "in" green, "Australia" gold */}
             <motion.span
-              className="block text-5xl md:text-6xl lg:text-[80px] xl:text-[90px] font-bold italic leading-[1.05] tracking-tight shadow-none"
+              className="block text-5xl md:text-6xl lg:text-[80px] xl:text-[90px] font-bold leading-[1.05] tracking-tight shadow-none"
               initial={prefersReducedMotion ? false : { opacity: 0, y: 150 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', stiffness: 40, damping: 22, mass: 1.4, delay: 1.0 }}
@@ -126,16 +126,6 @@ export function Hero() {
               </span>
             </motion.span>
           </h1>
-          {/* Subtitle */}
-          <motion.p
-            className="mt-6 text-base md:text-lg lg:text-xl text-[#FAF7ED]/70 max-w-lg mx-auto leading-relaxed"
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: 'spring', stiffness: 50, damping: 24, mass: 1, delay: 1.3 }}
-          >
-            Australia&apos;s most active community of builders, designers,
-            and operators on Solana.
-          </motion.p>
         </div>
       </motion.div>
 

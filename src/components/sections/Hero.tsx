@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { useScreenSize } from '@/hooks/use-screen-size';
@@ -79,10 +80,13 @@ export function Hero() {
         }}
         style={{ y: bgY }}
       >
-        <img
-          src="/images/uluru-full.png"
+        <Image
+          src="/images/uluru-full.webp"
           alt="Uluru at sunset with a builder working remotely in the Australian outback"
-          className="w-full h-full object-cover"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
           style={{ objectPosition: 'center 30%' }}
         />
       </motion.div>
@@ -138,11 +142,14 @@ export function Hero() {
           opacity: { duration: 1.5, ease: 'easeOut' },
         }}
       >
-        <img
-          src="/images/uluru-foreground.png"
+        <Image
+          src="/images/uluru-foreground.webp"
           alt=""
-          aria-hidden="true"
-          className="w-full h-full object-cover"
+          aria-hidden={true}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
           style={{ objectPosition: 'center 30%' }}
         />
       </motion.div>

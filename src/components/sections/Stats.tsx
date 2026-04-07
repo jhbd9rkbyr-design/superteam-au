@@ -4,21 +4,22 @@ import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { InfiniteSlider } from '@/components/ui/infinite-slider';
+import { fetchStats, fetchPartners, fetchCopy, type CmsStat, type CmsPartner } from '@/lib/cms';
 
-const stats = [
+const defaultStats: CmsStat[] = [
   { value: 250, label: 'Members', suffix: '+' },
   { value: 40, label: 'Events hosted', suffix: '+' },
   { value: 80, label: 'Projects built', suffix: '+' },
   { value: 120, label: 'Bounties completed', suffix: '+' },
 ];
 
-const logos = [
-  { name: 'Jupiter', src: '/images/logos/jupiter.svg', twitter: 'https://x.com/JupiterExchange' },
-  { name: 'Orca', src: '/images/logos/orca.svg', twitter: 'https://x.com/orca_so' },
-  { name: 'Pyth Network', src: '/images/logos/pyth.svg', twitter: 'https://x.com/PythNetwork' },
-  { name: 'Raydium', src: '/images/logos/raydium.svg', twitter: 'https://x.com/RaydiumProtocol' },
-  { name: 'Wormhole', src: '/images/logos/wormhole.svg', twitter: 'https://x.com/wormhole' },
-  { name: 'Bonk', src: '/images/logos/bonk.svg', twitter: 'https://x.com/bonk_inu' },
+const defaultLogos: CmsPartner[] = [
+  { name: 'Jupiter', logo_url: '/images/logos/jupiter.svg', link_url: 'https://x.com/JupiterExchange' },
+  { name: 'Orca', logo_url: '/images/logos/orca.svg', link_url: 'https://x.com/orca_so' },
+  { name: 'Pyth Network', logo_url: '/images/logos/pyth.svg', link_url: 'https://x.com/PythNetwork' },
+  { name: 'Raydium', logo_url: '/images/logos/raydium.svg', link_url: 'https://x.com/RaydiumProtocol' },
+  { name: 'Wormhole', logo_url: '/images/logos/wormhole.svg', link_url: 'https://x.com/wormhole' },
+  { name: 'Bonk', logo_url: '/images/logos/bonk.svg', link_url: 'https://x.com/bonk_inu' },
 ];
 
 function StatCounter({
@@ -79,6 +80,16 @@ function StatCounter({
 }
 
 export function Stats() {
+  const [stats, setStats] = useState<CmsStat[]>(defaultStats);
+  const [logos, setLogos] = useState<CmsPartner[]>(defaultLogos);
+  const [socialLabel, setSocialLabel] = useState('Building with the best in Solana');
+
+  useEffect(() => {
+    fetchStats().then((d) => d && setStats(d));
+    fetchPartners().then((d) => d && setLogos(d));
+    fetchCopy(['stats.social_proof_label']).then((d) => d?.['stats.social_proof_label'] && setSocialLabel(d['stats.social_proof_label']));
+  }, []);
+
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -122,7 +133,7 @@ export function Stats() {
             className="text-center text-base font-bold text-white mb-8"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            Building with the best in Solana
+            {socialLabel}
           </p>
         </div>
 
@@ -136,7 +147,7 @@ export function Stats() {
             {[...logos, ...logos, ...logos].map((logo, i) => (
               <a
                 key={`${logo.name}-${i}`}
-                href={logo.twitter}
+                href={logo.link_url}
                 target="_blank"
                 rel="noopener noreferrer"
                 title={logo.name}
@@ -147,7 +158,7 @@ export function Stats() {
                   style={{ boxShadow: '0 0 24px rgba(255, 255, 255, 0.3)' }}
                 />
                 <Image
-                  src={logo.src}
+                  src={logo.logo_url}
                   alt={logo.name}
                   width={44}
                   height={44}

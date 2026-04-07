@@ -1,63 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
+import { fetchFaq, fetchCopy, type CmsFaq } from '@/lib/cms';
 
-const faqs = [
-  {
-    question: 'What is Superteam Australia?',
-    answer: (
-      <>
-        Superteam Australia is a community of builders, designers, and operators working on Solana. We provide resources, mentorship, bounties, and networking opportunities to help you succeed in Web3.
-      </>
-    ),
-  },
-  {
-    question: 'How do I join the community?',
-    answer: (
-      <>
-        Join our Discord server and attend our events. There&apos;s no formal membership process — just show up, introduce yourself, and start building with us.
-      </>
-    ),
-  },
-  {
-    question: 'How can I earn bounties?',
-    answer: (
-      <>
-        Browse available opportunities on{' '}
-        <a href="https://superteam.fun/earn/s/superteamaustralia" target="_blank" rel="noopener noreferrer" className="text-[#00833F] underline underline-offset-2 hover:text-[#00833F]/70 transition-colors">
-          Superteam Earn
-        </a>
-        . Submit your proposal, get approved, and start building. Bounties range from 1,000 to 10,000+ USDC depending on complexity.
-      </>
-    ),
-  },
-  {
-    question: 'Are there events in other Australian cities?',
-    answer: (
-      <>
-        Yes! We host events regularly in Sydney, Melbourne, Brisbane, and Perth. Check our{' '}
-        <a href="https://lu.ma/SuperteamAU" target="_blank" rel="noopener noreferrer" className="text-[#00833F] underline underline-offset-2 hover:text-[#00833F]/70 transition-colors">
-          events on Luma
-        </a>
-        {' '}for upcoming meetups, workshops, and hackathons near you.
-      </>
-    ),
-  },
-  {
-    question: 'Is there mentorship available?',
-    answer: (
-      <>
-        Absolutely. We have experienced builders and founders available for mentorship. Connect with community members at events or reach out on Discord.
-      </>
-    ),
-  },
+const defaultFaqs: CmsFaq[] = [
+  { id: '1', question: 'What is Superteam Australia?', answer: 'Superteam Australia is a community of builders, designers, and operators working on Solana. We provide resources, mentorship, bounties, and networking opportunities to help you succeed in Web3.' },
+  { id: '2', question: 'How do I join the community?', answer: 'Join our Discord server and attend our events. There\'s no formal membership process — just show up, introduce yourself, and start building with us.' },
+  { id: '3', question: 'How can I earn bounties?', answer: 'Browse available opportunities on Superteam Earn (superteam.fun/earn/s/superteamaustralia). Submit your proposal, get approved, and start building. Bounties range from 1,000 to 10,000+ USDC depending on complexity.' },
+  { id: '4', question: 'Are there events in other Australian cities?', answer: 'Yes! We host events regularly in Sydney, Melbourne, Brisbane, and Perth. Check our events on Luma (lu.ma/SuperteamAU) for upcoming meetups, workshops, and hackathons near you.' },
+  { id: '5', question: 'Is there mentorship available?', answer: 'Absolutely. We have experienced builders and founders available for mentorship. Connect with community members at events or reach out on Discord.' },
 ];
 
 interface FAQItemProps {
   question: string;
-  answer: React.ReactNode;
+  answer: string;
   isOpen: boolean;
   onClick: () => void;
   index: number;
@@ -107,7 +65,18 @@ function FAQItem({ question, answer, isOpen, onClick, index }: FAQItemProps) {
 }
 
 export function FAQ() {
+  const [faqs, setFaqs] = useState<CmsFaq[]>(defaultFaqs);
+  const [badge, setBadge] = useState('FAQ');
+  const [heading, setHeading] = useState('Common Questions');
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  useEffect(() => {
+    fetchFaq().then((d) => d && setFaqs(d));
+    fetchCopy(['faq.badge', 'faq.heading']).then((d) => {
+      if (d?.['faq.badge']) setBadge(d['faq.badge']);
+      if (d?.['faq.heading']) setHeading(d['faq.heading']);
+    });
+  }, []);
 
   return (
     <section className="w-full bg-cream py-20 md:py-32" data-navbar-theme="light">
@@ -128,13 +97,13 @@ export function FAQ() {
               fontFamily: 'var(--font-display)',
             }}
           >
-            FAQ
+            {badge}
           </span>
           <h2
             className="text-4xl md:text-5xl font-bold text-text-primary mb-4"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            Common Questions
+            {heading}
           </h2>
         </motion.div>
 
@@ -142,7 +111,7 @@ export function FAQ() {
         <div className="space-y-4">
           {faqs.map((faq, idx) => (
             <FAQItem
-              key={idx}
+              key={faq.id}
               question={faq.question}
               answer={faq.answer}
               isOpen={openIndex === idx}

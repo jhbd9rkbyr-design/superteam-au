@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { MemberCarousel, iMember } from '@/components/ui/member-carousel';
 import { ArrowRight } from 'lucide-react';
+import { fetchCopy } from '@/lib/cms';
 
 const members: (iMember & { id: string })[] = [
   {
@@ -81,6 +82,25 @@ const members: (iMember & { id: string })[] = [
 ];
 
 export function Community() {
+  const [badgeText, setBadgeText] = useState('Members');
+  const [heading, setHeading] = useState('Meet our');
+  const [headingAccent, setHeadingAccent] = useState('Roos');
+  const [subheading, setSubheading] = useState('The people accelerating Solana in Australia, developers, founders, designers and operators.');
+
+  useEffect(() => {
+    fetchCopy(['community.badge', 'community.heading', 'community.subheading']).then((d) => {
+      if (d?.['community.badge']) setBadgeText(d['community.badge']);
+      if (d?.['community.heading']) {
+        // Support "Meet our Roos" format — last word becomes the gradient accent
+        const parts = d['community.heading'].split(' ');
+        const accent = parts.pop() || 'Roos';
+        setHeading(parts.join(' '));
+        setHeadingAccent(accent);
+      }
+      if (d?.['community.subheading']) setSubheading(d['community.subheading']);
+    });
+  }, []);
+
   return (
     <section className="w-full bg-cream py-20 md:py-32 overflow-hidden" data-navbar-theme="light">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
@@ -99,16 +119,16 @@ export function Community() {
               fontFamily: 'var(--font-display)',
             }}
           >
-            Members
+            {badgeText}
           </span>
           <h2
             className="text-4xl md:text-5xl font-bold text-[#141E14] mb-4"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            Meet our <span className="text-gradient">Roos</span>
+            {heading} <span className="text-gradient">{headingAccent}</span>
           </h2>
           <p className="text-[#141E14]/60 text-lg max-w-2xl mx-auto">
-            The people accelerating Solana in Australia, developers, founders, designers and operators.
+            {subheading}
           </p>
         </motion.div>
 

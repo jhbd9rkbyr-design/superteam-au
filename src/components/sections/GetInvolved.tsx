@@ -1,12 +1,26 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FloatingPaths } from '@/components/ui/background-paths';
 import { ArrowRight } from 'lucide-react';
+import { fetchCopy } from '@/lib/cms';
 
 export function GetInvolved() {
-  const title = "Ready to Build?";
+  const [badge, setBadge] = useState('Join Us');
+  const [title, setTitle] = useState('Ready to Build?');
+  const [subtitle, setSubtitle] = useState("Join Australia's most active Solana community and start building today.");
+  const [cta, setCta] = useState('Get Involved');
+
+  useEffect(() => {
+    fetchCopy(['get_involved.badge', 'get_involved.heading', 'get_involved.subheading', 'get_involved.cta']).then((d) => {
+      if (d?.['get_involved.badge']) setBadge(d['get_involved.badge']);
+      if (d?.['get_involved.heading']) setTitle(d['get_involved.heading']);
+      if (d?.['get_involved.subheading']) setSubtitle(d['get_involved.subheading']);
+      if (d?.['get_involved.cta']) setCta(d['get_involved.cta']);
+    });
+  }, []);
+
   const words = title.split(" ");
 
   return (
@@ -44,7 +58,7 @@ export function GetInvolved() {
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
           >
-            Join Us
+            {badge}
           </motion.span>
 
           {/* Animated title — letter by letter */}
@@ -84,7 +98,7 @@ export function GetInvolved() {
             transition={{ duration: 0.6, delay: 0.4 }}
             viewport={{ once: true }}
           >
-            Join Australia&apos;s most active Solana community and start building today.
+            {subtitle}
           </motion.p>
 
           {/* CTA Button — frosted glass style */}
@@ -112,7 +126,7 @@ export function GetInvolved() {
                   }}
                 >
                   <span className="text-white text-[16px] font-semibold opacity-90 group-hover:opacity-100 transition-opacity">
-                    Get Involved
+                    {cta}
                   </span>
                   <ArrowRight
                     size={16}

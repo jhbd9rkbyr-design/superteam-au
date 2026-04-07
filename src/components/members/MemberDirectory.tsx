@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { members, FILTER_CATEGORIES, type Member, type FilterCategory } from './member-data';
+import { members as staticMembers, FILTER_CATEGORIES, type Member, type FilterCategory } from './member-data';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 /* ─── Skill icon map (same as carousel) ─── */
 const skillIconMap: Record<string, string> = {
@@ -155,8 +156,33 @@ function DirectoryCard({ member, index }: { member: Member; index: number }) {
 
 /* ─── Main Directory ─── */
 export function MemberDirectory() {
+  const [members, setMembers] = useState<Member[]>(staticMembers);
   const [query, setQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<FilterCategory | null>(null);
+
+  /* Fetch from Supabase if configured, otherwise use static data */
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+    (async () => {
+      const { data, error } = await supabase
+        .from('members')
+        .select('*')
+        .eq('visible', true)
+        .order('sort_order', { ascending: true });
+      if (!error && data && data.length > 0) {
+        setMembers(data.map((m) => ({
+          id: m.id,
+          name: m.name,
+          title: m.title,
+          company: m.company,
+          photo: m.photo,
+          skills: m.skills,
+          filters: m.filters,
+          twitter: m.twitter ?? undefined,
+        })));
+      }
+    })();
+  }, []);
 
   const toggleFilter = (f: FilterCategory) => {
     setActiveFilter((prev) => (prev === f ? null : f));
@@ -169,7 +195,7 @@ export function MemberDirectory() {
       counts[f] = members.filter((m) => m.filters.includes(f)).length;
     });
     return counts;
-  }, []);
+  }, [members]);
 
   /* Filtered + searched members */
   const filtered = useMemo(() => {
@@ -191,7 +217,7 @@ export function MemberDirectory() {
     }
 
     return result;
-  }, [query, activeFilter]);
+  }, [members, query, activeFilter]);
 
   return (
     <div className="min-h-screen bg-cream" data-navbar-theme="light">

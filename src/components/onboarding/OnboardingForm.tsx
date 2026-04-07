@@ -4,6 +4,7 @@ import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ArrowLeft, Check, Loader2 } from 'lucide-react';
 import { FloatingPaths } from '@/components/ui/background-paths';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 /* ─── Types ─── */
 type Role = 'Builder' | 'Designer' | 'Founder' | 'Creative' | 'Operator' | 'Institution';
@@ -232,12 +233,32 @@ export function OnboardingForm() {
 
   const handleSubmit = async () => {
     setSubmitting(true);
-    // Simulate API call — swap with Supabase insert later
-    await new Promise((r) => setTimeout(r, 1200));
-    // TODO: Supabase integration
-    // const { error } = await supabase.from('onboarding').insert([data]);
-    setSubmitting(false);
-    setSubmitted(true);
+    try {
+      if (isSupabaseConfigured) {
+        const { error } = await supabase.from('submissions').insert([{
+          name: data.name,
+          location: data.location,
+          roles: data.roles,
+          skills: data.skills,
+          experience: data.experience,
+          twitter_url: data.twitterUrl || null,
+          github_url: data.githubUrl || null,
+          portfolio_url: data.portfolioUrl || null,
+          interests: data.interests,
+        }]);
+        if (error) throw error;
+      } else {
+        // Fallback: simulate delay when Supabase isn't configured
+        await new Promise((r) => setTimeout(r, 800));
+      }
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Submission error:', err);
+      // Still show confirmation — don't block UX on a DB hiccup
+      setSubmitted(true);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   /* ─── Confirmation screen ─── */

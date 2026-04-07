@@ -131,12 +131,16 @@ export const CardTransformed = React.forwardRef<
       index * incrementZ
     }px) translateY(${y}) rotate(${rotate}deg)`
 
+    // Check if mobile (no window on SSR, default to false)
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768
+
     const dx = useTransform(scrollYProgress, rotateRange, [4, 0])
     const dy = useTransform(scrollYProgress, rotateRange, [4, 12])
     const blur = useTransform(scrollYProgress, rotateRange, [2, 24])
     const alpha = useTransform(scrollYProgress, rotateRange, [0.15, 0.2])
+    // Disable drop-shadow on mobile — causes GPU rendering glitches
     const filter =
-      variant !== "dark"
+      variant !== "dark" && !isMobile
         ? useMotionTemplate`drop-shadow(${dx}px ${dy}px ${blur}px rgba(0,0,0,${alpha}))`
         : "none"
 

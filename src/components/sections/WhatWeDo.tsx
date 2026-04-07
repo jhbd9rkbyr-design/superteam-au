@@ -75,7 +75,7 @@ export function WhatWeDo() {
       </div>
 
       {/* Animated cards section — pill lives inside the sticky area */}
-      <ContainerScroll className="container relative z-10 mx-auto mt-16 h-[350vh] max-w-7xl px-4 md:px-8">
+      <ContainerScroll className="container relative z-10 mx-auto mt-16 h-[250vh] md:h-[350vh] max-w-7xl px-4 md:px-8">
         <div className="sticky left-0 top-[130px] h-[calc(100svh-150px)] w-full bg-[#FAFAF5]">
           {/* Green pill */}
           <motion.div

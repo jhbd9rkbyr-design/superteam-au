@@ -118,10 +118,10 @@ export function Stats() {
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           {/* Subtitle */}
           <p
-            className="text-center text-lg md:text-xl text-[#FAF7ED]/80 mb-10 max-w-xl mx-auto leading-relaxed"
+            className="text-center text-lg md:text-xl text-white mb-10 max-w-none leading-relaxed"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            Australia&apos;s most active community of builders, designers, and operators on Solana.
+            Australia&apos;s most active community of builders, designers, and operators on Solana
           </p>
 
           {/* Stats counters */}

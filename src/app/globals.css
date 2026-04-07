@@ -1,6 +1,13 @@
 @import "tailwindcss";
 @import "react-tweet/theme.css";
 
+/* Prevent horizontal overflow — must be in CSS, not just Tailwind class,
+   because some mobile browsers ignore overflow-x on body alone */
+html, body {
+  max-width: 100vw;
+  overflow-x: clip;
+}
+
 /* ═══════════════════════════════════════════
    SUPERTEAM AUSTRALIA — BRAND TOKENS
    ═══════════════════════════════════════════ */

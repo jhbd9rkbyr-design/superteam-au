@@ -12,6 +12,12 @@ export const metadata: Metadata = {
     title: "Superteam Australia",
     description: "Australia's most active builder community on Solana",
     type: "website",
+    siteName: "Superteam Australia",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Superteam Australia",
+    description: "Australia's most active builder community on Solana",
   },
 };
 

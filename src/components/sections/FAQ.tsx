@@ -28,38 +28,41 @@ function FAQItem({ question, answer, isOpen, onClick, index }: FAQItemProps) {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.05 }}
       viewport={{ once: true }}
-      className={`bg-white rounded-xl border transition-all duration-300 ${
-        isOpen ? 'border-gradient' : 'border-dark-green/8'
-      } px-6 py-5`}
     >
-      <button
-        onClick={onClick}
-        className="w-full flex items-center justify-between text-left cursor-pointer"
+      <div
+        className={`bg-white rounded-xl border transition-all duration-300 ${
+          isOpen ? 'border-brand-green/30' : 'border-dark-green/8'
+        } px-6 py-5`}
       >
-        <h3 className="font-medium text-text-primary text-lg">{question}</h3>
-        <motion.div
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
-          className="flex-shrink-0 ml-4"
+        <button
+          onClick={onClick}
+          className="w-full flex items-center justify-between text-left cursor-pointer"
         >
-          <ChevronDown size={20} className="text-brand-green" />
-        </motion.div>
-      </button>
-
-      <AnimatePresence>
-        {isOpen && (
+          <h3 className="font-medium text-text-primary text-lg">{question}</h3>
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
+            animate={{ rotate: isOpen ? 180 : 0 }}
+            transition={{ duration: 0.2 }}
+            className="flex-shrink-0 ml-4"
           >
-            <div className="text-text-secondary text-[15px] leading-relaxed mt-4 pt-4 border-t border-dark-green/8">
-              {answer}
-            </div>
+            <ChevronDown size={20} className="text-brand-green" />
           </motion.div>
-        )}
-      </AnimatePresence>
+        </button>
+
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="text-text-secondary text-[15px] leading-relaxed mt-4 pt-4 border-t border-dark-green/8">
+                {answer}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </motion.div>
   );
 }

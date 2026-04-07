@@ -8,6 +8,7 @@
 // - Luma API key needed — store in env var LUMA_API_KEY
 
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/Badge';
 import { Calendar, MapPin, ExternalLink, Clock } from 'lucide-react';
@@ -97,11 +98,12 @@ export function Events() {
             >
               {/* Event Cover Image */}
               <div className="aspect-square relative overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={event.image}
                   alt={event.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute top-4 right-4 z-10">
                   <Badge

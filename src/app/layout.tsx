@@ -21,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${satoshi.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col font-[var(--font-inter)]">
+    <html lang="en" className={`${inter.variable} ${satoshi.variable} h-full antialiased overflow-x-hidden`}>
+      <body className="min-h-full flex flex-col font-[var(--font-inter)] overflow-x-hidden">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

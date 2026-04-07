@@ -162,7 +162,7 @@ export function Stats() {
                   alt={logo.name}
                   width={44}
                   height={44}
-                  className="relative z-10 w-11 h-11 object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+                  className="relative z-10 w-11 h-11 object-contain opacity-100"
                 />
               </a>
             ))}

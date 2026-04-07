@@ -96,11 +96,11 @@ export function Hero() {
         className="absolute left-0 right-0 z-[1] flex justify-center pointer-events-none"
         style={{ top: '22%', opacity: textOpacity, y: textY }}
       >
-        <div className="text-center px-6" style={{ fontFamily: 'var(--font-display)' }}>
+        <div className="text-center px-6" style={{ fontFamily: 'var(--font-display)', textShadow: '0 2px 30px rgba(0,0,0,0.5)' }}>
           <h1>
             {/* Line 1 — slides up from behind Uluru */}
             <motion.span
-              className="block text-5xl md:text-6xl lg:text-[80px] xl:text-[90px] font-bold text-[#FAF7ED] leading-[1.05] tracking-tight drop-shadow-[0_2px_40px_rgba(0,0,0,0.6)]"
+              className="block text-5xl md:text-6xl lg:text-[80px] xl:text-[90px] font-bold text-[#FAF7ED] leading-[1.05] tracking-tight shadow-none"
               initial={prefersReducedMotion ? false : { opacity: 0, y: 150 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', stiffness: 40, damping: 22, mass: 1.4, delay: 0.8 }}
@@ -109,7 +109,7 @@ export function Hero() {
             </motion.span>
             {/* Line 2 — gradient on "Solana Builders", slides up staggered */}
             <motion.span
-              className="block text-5xl md:text-6xl lg:text-[80px] xl:text-[90px] font-bold text-[#FAF7ED] leading-[1.05] tracking-tight drop-shadow-[0_2px_40px_rgba(0,0,0,0.6)]"
+              className="block text-5xl md:text-6xl lg:text-[80px] xl:text-[90px] font-bold text-[#FAF7ED] leading-[1.05] tracking-tight shadow-none"
               initial={prefersReducedMotion ? false : { opacity: 0, y: 150 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', stiffness: 40, damping: 22, mass: 1.4, delay: 1.0 }}

@@ -64,7 +64,7 @@ const services = [
 
 export function WhatWeDo() {
   return (
-    <section className="relative w-full bg-[#FAFAF5] pt-16 md:pt-24 pb-0" data-navbar-theme="light">
+    <section className="relative w-full bg-[#FAFAF5] pt-16 md:pt-24 pb-0 overflow-hidden" data-navbar-theme="light">
       {/* Scroll-reveal mission statement */}
       <div className="max-w-4xl mx-auto px-4 md:px-8">
         <TextRevealByWord

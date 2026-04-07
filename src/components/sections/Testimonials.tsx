@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Tweet } from 'react-tweet';
 import { fetchTestimonials, fetchCopy } from '@/lib/cms';
+import { TestimonialsColumn } from '@/components/ui/testimonials-column';
 
 const defaultTweetIds = [
   '2040960063054156028',
@@ -12,18 +12,6 @@ const defaultTweetIds = [
   '2039271545885835739',
   '2039279581249798643',
   '2041131896600731680',
-];
-
-const floatPresets = [
-  { rot: '-1.2deg', y: '-6px', dur: '6s', delay: '0s' },
-  { rot: '0.8deg',  y: '5px',  dur: '7s', delay: '-2s' },
-  { rot: '-0.6deg', y: '-5px', dur: '5.5s', delay: '-3.5s' },
-  { rot: '1deg',    y: '6px',  dur: '6.5s', delay: '-1s' },
-  { rot: '-0.8deg', y: '-4px', dur: '6s', delay: '-4s' },
-  { rot: '0.5deg',  y: '5px',  dur: '7.5s', delay: '-0.5s' },
-  { rot: '-0.9deg', y: '-5px', dur: '5s', delay: '-3s' },
-  { rot: '1.1deg',  y: '4px',  dur: '6.5s', delay: '-2.5s' },
-  { rot: '-0.7deg', y: '-6px', dur: '7s', delay: '-1.5s' },
 ];
 
 export function Testimonials() {
@@ -41,9 +29,22 @@ export function Testimonials() {
     });
   }, []);
 
+  /* Split tweets across columns — 1 col mobile, 2 tablet, 3 desktop */
+  const [col1, col2, col3] = useMemo(() => {
+    const c1: string[] = [];
+    const c2: string[] = [];
+    const c3: string[] = [];
+    tweetIds.forEach((id, i) => {
+      if (i % 3 === 0) c1.push(id);
+      else if (i % 3 === 1) c2.push(id);
+      else c3.push(id);
+    });
+    return [c1, c2, c3];
+  }, [tweetIds]);
+
   return (
     <section className="w-full bg-dark-green bg-topo-dark py-20 md:py-32 overflow-hidden" data-navbar-theme="dark">
-      <div className="max-w-5xl mx-auto px-4 md:px-8">
+      <div className="max-w-6xl mx-auto px-4 md:px-8">
         {/* Section Header */}
         <motion.div
           className="text-center mb-14"
@@ -76,31 +77,17 @@ export function Testimonials() {
           </p>
         </motion.div>
 
-        {/* Auto-balanced masonry — CSS columns handles height optimization */}
-        <div className="tweet-masonry">
-          {tweetIds.map((id, idx) => {
-            const fc = floatPresets[idx % floatPresets.length];
-            return (
-              <motion.div
-                key={id}
-                className="tweet-float break-inside-avoid mb-3"
-                style={{
-                  '--rot': fc.rot,
-                  '--float-y': fc.y,
-                  '--float-dur': fc.dur,
-                  '--float-delay': fc.delay,
-                } as React.CSSProperties}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: idx * 0.08 }}
-                viewport={{ once: true }}
-              >
-                <div data-theme="dark" className="tweet-embed-compact">
-                  <Tweet id={id} />
-                </div>
-              </motion.div>
-            );
-          })}
+        {/* Scrolling columns with gradient mask */}
+        <div
+          className="flex justify-center gap-5 max-h-[700px] overflow-hidden"
+          style={{
+            maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)',
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)',
+          }}
+        >
+          <TestimonialsColumn tweetIds={col1} duration={25} />
+          <TestimonialsColumn tweetIds={col2} duration={30} className="hidden md:block" />
+          <TestimonialsColumn tweetIds={col3} duration={22} className="hidden lg:block" />
         </div>
       </div>
     </section>

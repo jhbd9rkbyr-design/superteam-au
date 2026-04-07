@@ -3,7 +3,6 @@
 import React, { useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
 import { useScreenSize } from '@/hooks/use-screen-size';
 import { PixelTrail } from '@/components/ui/pixel-trail';
 
@@ -12,8 +11,6 @@ import { PixelTrail } from '@/components/ui/pixel-trail';
 const SLOW_SPRING = { type: 'spring' as const, stiffness: 50, damping: 30, mass: 1.2 };
 // Responsive spring for text — slightly snappier
 const TEXT_SPRING = { type: 'spring' as const, stiffness: 80, damping: 28, mass: 1 };
-// Quick spring for CTA
-const CTA_SPRING = { type: 'spring' as const, stiffness: 100, damping: 22, mass: 0.8 };
 
 // ── Orbiting radial gradient for "on Solana" ──
 // The gradient center orbits in a smooth circle via requestAnimationFrame.
@@ -58,7 +55,6 @@ export function Hero() {
   // Scroll-driven — smooth transforms
   const textOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
   const textY = useTransform(scrollYProgress, [0, 0.3], [0, -40]);
-  const ctaOpacity = useTransform(scrollYProgress, [0.05, 0.35], [1, 0]);
   const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '6%']);
 
   return (
@@ -98,22 +94,23 @@ export function Hero() {
       >
         <div className="text-center px-6" style={{ fontFamily: 'var(--font-display)' }}>
           <h1>
-            {/* Line 1 — slides up from behind Uluru */}
+            {/* Line 1 */}
             <motion.span
               className="block text-5xl md:text-6xl lg:text-[80px] xl:text-[90px] font-bold text-[#FAF7ED] leading-[1.05] tracking-tight shadow-none"
               initial={prefersReducedMotion ? false : { opacity: 0, y: 150 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', stiffness: 40, damping: 22, mass: 1.4, delay: 0.8 }}
             >
-              Australia&apos;s Home for
+              Accelerating Solana
             </motion.span>
-            {/* Line 2 — gradient on "Solana Builders", slides up staggered */}
+            {/* Line 2 — "in" green, "Australia" gold */}
             <motion.span
-              className="block text-5xl md:text-6xl lg:text-[80px] xl:text-[90px] font-bold text-[#FAF7ED] leading-[1.05] tracking-tight shadow-none"
+              className="block text-5xl md:text-6xl lg:text-[80px] xl:text-[90px] font-bold italic leading-[1.05] tracking-tight shadow-none"
               initial={prefersReducedMotion ? false : { opacity: 0, y: 150 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', stiffness: 40, damping: 22, mass: 1.4, delay: 1.0 }}
             >
+              <span style={{ color: '#00833F' }}>in </span>
               <span
                 ref={gradientRef}
                 className="inline-block"
@@ -125,10 +122,20 @@ export function Hero() {
                   color: 'transparent',
                 }}
               >
-                Solana Builders
+                Australia
               </span>
             </motion.span>
           </h1>
+          {/* Subtitle */}
+          <motion.p
+            className="mt-6 text-base md:text-lg lg:text-xl text-[#FAF7ED]/70 max-w-lg mx-auto leading-relaxed"
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: 'spring', stiffness: 50, damping: 24, mass: 1, delay: 1.3 }}
+          >
+            Australia&apos;s most active community of builders, designers,
+            and operators on Solana.
+          </motion.p>
         </div>
       </motion.div>
 
@@ -154,26 +161,7 @@ export function Hero() {
         />
       </motion.div>
 
-      {/* ═══ LAYER 4 — CTA (in front of pixel trail) ═══ */}
-      <motion.div
-        className="absolute left-0 right-0 z-[5] flex justify-center pointer-events-none"
-        style={{ top: '62%', opacity: ctaOpacity }}
-      >
-        <motion.div
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ ...CTA_SPRING, delay: 1.8 }}
-        >
-          <a
-            href="#get-involved"
-            className="pointer-events-auto inline-flex items-center gap-2.5 font-semibold text-base px-8 py-4 rounded-full hover:scale-[1.03] transition-transform duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.25)]"
-            style={{ backgroundColor: '#FEFEF0', color: '#3E4742', fontFamily: 'var(--font-display)' }}
-          >
-            Join the Community
-            <ArrowRight size={18} strokeWidth={2.5} />
-          </a>
-        </motion.div>
-      </motion.div>
+      {/* CTA removed — hero is cleaner without it */}
 
       {/* ═══ LAYER 5 — Pixel trail ═══ */}
       <div className="absolute inset-0 z-[4]">

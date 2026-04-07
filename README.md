@@ -1,25 +1,32 @@
 # Superteam Australia
 
-The official web presence for Superteam Australia — Solana's builder network in Australia. A fully responsive, production-ready Next.js application with a custom brand system, animated interactions, and community-first design.
+The official web presence for **Superteam Australia** — Solana's builder network in Australia. A fully responsive, production-ready Next.js application with a Supabase CMS, custom brand system, animated interactions, and community-first design.
+
+**Live Demo**: [superteam-au.vercel.app](https://superteam-au.vercel.app)
+**Repository**: [github.com/jhbd9rkbyr-design/superteam-au](https://github.com/jhbd9rkbyr-design/superteam-au)
 
 ## Project Overview
 
-Superteam Australia connects builders, designers, founders, and operators across the Solana ecosystem in Australia. This site serves as the primary landing page, member directory, and onboarding flow for the community.
+Superteam Australia connects builders, designers, founders, and operators across the Solana ecosystem in Australia. This site serves as the primary landing page, member directory, onboarding flow, and CMS-powered content platform for the community.
 
 ### Pages
 
-- **Landing Page** (`/`) — Hero with Uluru backdrop, animated stats, social proof carousel, event listings, member carousel, tweet testimonials, CTA with animated SVG paths, FAQ
+- **Landing Page** (`/`) — Hero with parallax Uluru backdrop, animated stats counter, social proof logo carousel, event listings (Luma API), member carousel, scrolling tweet testimonials, CTA section, FAQ accordion
 - **Member Directory** (`/members`) — Searchable, filterable directory with skill-based categories and animated card grid
-- **Get Involved** (`/get-involved`) — Multi-step onboarding form collecting name, location, role, skills, experience, links, and interests
+- **Get Involved** (`/get-involved`) — Multi-step onboarding form with Supabase persistence and admin review workflow
 
 ### Key Features
 
+- Full CMS via Supabase — all content editable without code changes
+- Luma API integration for live event sync (with Supabase fallback)
+- Role-based access control (RBAC) for admin content management
 - Animated text gradients, floating SVG paths, and staggered card entrances (Framer Motion)
 - Infinite auto-scroll member carousel and logo marquee
 - Server-rendered tweet embeds via `react-tweet` (no Twitter JS SDK)
-- CSS masonry layout for variable-height testimonials
+- Auto-scrolling testimonial columns with gradient masks
 - Dynamic navbar theme switching based on scroll position (dark/light sections)
-- Responsive across all breakpoints
+- Responsive across all breakpoints (mobile-first)
+- OpenGraph and Twitter Card meta for social sharing
 
 ## Tech Stack
 
@@ -29,11 +36,42 @@ Superteam Australia connects builders, designers, founders, and operators across
 | Language | TypeScript |
 | Styling | Tailwind CSS 4 |
 | Animation | Framer Motion 12 |
+| CMS / Database | Supabase (Postgres + RLS + Auth) |
+| Events | Luma API (live sync) |
 | Tweets | react-tweet |
 | Fonts | Satoshi (display), Inter (body) |
 | Icons | Lucide React |
-| Database | Supabase (optional, for onboarding) |
 | Deployment | Vercel |
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────┐
+│                    Vercel (Edge)                     │
+│  Next.js 16 App Router · ISR · Image Optimization   │
+├─────────────────────────────────────────────────────┤
+│  Landing Page    │  Members Page   │  Get Involved   │
+│  (/)             │  (/members)     │  (/get-involved) │
+├─────────────────────────────────────────────────────┤
+│                  CMS Data Layer                      │
+│  cms.ts fetchers · static fallbacks · type-safe      │
+├──────────┬──────────────┬───────────────────────────┤
+│ Luma API │  Supabase    │  Static Defaults          │
+│ (events) │  (all CMS)   │  (fallback)               │
+│          │              │                           │
+│          ├── members    │  Hardcoded arrays in      │
+│          ├── events     │  each component for       │
+│          ├── stats      │  zero-config operation    │
+│          ├── faq        │                           │
+│          ├── partners   │                           │
+│          ├── testimonials│                          │
+│          ├── site_copy  │                           │
+│          ├── submissions│                           │
+│          └── admin_users│                           │
+└──────────┴──────────────┴───────────────────────────┘
+```
+
+**Data priority**: Luma API (live events) → Supabase tables → Static fallbacks
 
 ## Project Structure
 
@@ -43,6 +81,8 @@ src/
 │   ├── page.tsx              # Landing page
 │   ├── layout.tsx            # Root layout (Navbar + Footer)
 │   ├── globals.css           # Brand tokens, gradients, animations
+│   ├── favicon.ico           # Favicon (multi-size)
+│   ├── opengraph-image.png   # OG image (1200×630)
 │   ├── members/page.tsx      # Member directory
 │   └── get-involved/page.tsx # Onboarding form
 ├── components/
@@ -52,18 +92,26 @@ src/
 │   ├── members/              # MemberDirectory, member-data
 │   ├── onboarding/           # OnboardingForm
 │   └── ui/                   # Reusable: InfiniteSlider, BackgroundPaths,
-│                             # MemberCarousel, PixelTrail, etc.
+│                             # MemberCarousel, TestimonialsColumn, Badge, etc.
 ├── lib/
+│   ├── cms.ts                # CMS data fetchers (Supabase + Luma)
+│   ├── supabase.ts           # Supabase client singleton
 │   ├── fonts.ts              # Font config (Satoshi + Inter)
 │   └── utils.ts              # cn() utility
 └── fonts/                    # Satoshi variable woff2 files
+
+supabase/
+└── migrations/
+    ├── 001_initial_schema.sql   # Members + submissions tables
+    ├── 002_cms_tables.sql       # Stats, FAQ, testimonials, partners, site_copy
+    └── 003_events_and_rbac.sql  # Events table + admin_users + write policies
 ```
 
 ## Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/superteam-au.git
+git clone https://github.com/jhbd9rkbyr-design/superteam-au.git
 cd superteam-au
 
 # Install dependencies
@@ -79,11 +127,11 @@ Create a `.env.local` file from `.env.example`:
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `NEXT_PUBLIC_SUPABASE_URL` | No | Supabase project URL (onboarding form persistence) |
+| `NEXT_PUBLIC_SUPABASE_URL` | No | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | No | Supabase anonymous key |
-| `LUMA_API_KEY` | No | Luma API key for dynamic event listings |
+| `LUMA_API_KEY` | No | Luma API key for live event sync from SuperteamAU calendar |
 
-The site runs fully without any env vars — Supabase and Luma integrations are optional enhancements.
+The site runs fully without any env vars — all CMS integrations have static fallbacks baked in.
 
 ## Local Development
 
@@ -110,7 +158,7 @@ Open [http://localhost:3000](http://localhost:3000) to view the site.
 1. Push the repo to GitHub
 2. Import the project on [vercel.com/new](https://vercel.com/new)
 3. Vercel auto-detects Next.js — no config needed
-4. Add environment variables in Vercel dashboard (if using Supabase/Luma)
+4. Add environment variables in Vercel dashboard (optional)
 5. Deploy
 
 ### Manual
@@ -119,6 +167,38 @@ Open [http://localhost:3000](http://localhost:3000) to view the site.
 npm run build
 npm run start
 ```
+
+## Content Management System (CMS)
+
+The website uses Supabase as a full CMS. All section content is editable via Supabase Studio without touching code.
+
+See **[CMS.md](./CMS.md)** for complete documentation including:
+- Table schemas for all content types
+- RBAC setup (admin roles and permissions)
+- Luma API integration for events
+- Common admin tasks (updating stats, adding testimonials, managing members)
+- Media handling (Google Drive URLs)
+
+### CMS-Managed Content
+
+| Content | Table | Capabilities |
+|---------|-------|-------------|
+| Members | `members` | Add, edit, hide, reorder profiles |
+| Events | `events` + Luma API | Auto-sync from Luma or manual entry |
+| Stats | `stats` | Update counters and labels |
+| FAQ | `faq` | Add, edit, reorder, hide questions |
+| Testimonials | `testimonials` | Add/remove tweet IDs |
+| Partners | `partners` | Update logos and links |
+| Page Copy | `site_copy` | Edit any section heading, badge, or CTA |
+| Applications | `submissions` | Review and approve/reject |
+
+### Setup
+
+1. Create a Supabase project at [supabase.com](https://supabase.com)
+2. Run migrations in order via SQL Editor (`001` → `002` → `003`)
+3. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` to env vars
+4. (Optional) Add `LUMA_API_KEY` for live event sync
+5. Add admin users to `admin_users` table for write access
 
 ## Brand System
 
